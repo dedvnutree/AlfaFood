@@ -1,0 +1,16 @@
+.cafeAdmin {
+  &__content {
+    margin: 0 auto;
+    max-width: 1200px;
+    //background: red;
+    height: calc(100vh - 60px);
+  }
+
+  &__container {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+  }
+
+
+}

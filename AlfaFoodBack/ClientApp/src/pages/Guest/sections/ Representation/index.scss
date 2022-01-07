@@ -1,0 +1,82 @@
+.representationSection {
+  &__wrapper {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 200;
+    top: 0;
+    background: url("../../../../assets/images/repr.jpg") #0a0909;
+  }
+
+  &__text-part {
+    z-index: 10;
+    position: absolute;
+    top: 33%;
+    left: 8%;
+  }
+
+  &__title {
+    font-size: 42px;
+    font-weight: 600;
+    color: gray;
+  }
+  &__descr {
+    margin-top: 15px;
+    font-size: 23px;
+    font-weight: 500;
+    color: dimgray;
+  }
+  &__btn {
+    margin-top: 23px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    background: white;
+    cursor: pointer;
+    outline: none;
+    //transition: background-color .5s  ease-in-out;
+    &:focus {
+      outline: none;
+    }
+    &:hover {
+      background: #cccccc;
+    }
+  }
+
+  &__apps {
+    margin-top: 70px;
+    &-wrap {
+      display: flex;
+      column-gap: 15px;
+      margin-top: 20px;
+    }
+    &-title {
+      color: gray;
+      font-size: 16px;
+    }
+    &-link {
+      padding: 5px;
+      background-color: #cccccc;
+      border-radius: 3px;
+      &:hover {
+        opacity: 0.9
+      }
+    }
+    &-google {
+
+    }
+
+    &-apple {
+
+    }
+  }
+
+  &__imgs {
+    border: 4px solid darkblue;
+    position: absolute;
+    top: 14%;
+    //height: fit-content;
+    overflow: hidden;
+    right: 12%;
+  }
+}

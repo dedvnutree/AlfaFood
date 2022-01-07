@@ -1,0 +1,44 @@
+.changePassword {
+  &__form {
+    margin-top: 30px;
+    row-gap: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    h3 {
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+  &__field {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+  }
+  &__error {
+    color: red;
+  }
+  &__label {
+
+  }
+  &__input {
+    padding: 5px 10px;
+  }
+
+
+  &__btn {
+    background: #66afe9;
+    cursor: pointer;
+    padding: 6px 10px;
+    color: black;
+    border: 1px solid black;
+    margin: auto;
+    &:hover {
+      opacity: 0.8;
+    }
+
+  }
+
+}

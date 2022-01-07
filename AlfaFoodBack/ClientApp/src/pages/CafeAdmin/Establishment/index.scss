@@ -1,0 +1,31 @@
+.establishment {
+  &__title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  &__wrapper {
+    padding: 20px;
+  }
+
+  &__content {
+    margin-top: 25px;
+  }
+
+  &__links {
+    margin-top: 15px;
+    display: flex;
+    gap: 60px;
+  }
+  &__link {
+    font-size: 18px;
+    font-weight: 500;
+    color: black;
+    &:hover {
+      color: black;
+      opacity: 0.9;
+    }
+    &-active {
+      color: red;
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.establishmentBooking {
+  &__wrapper {
+    display: flex;
+    gap: 60px;
+    //justify-content: space-around;
+  }
+  &__image-zone {
+    width: 600px;
+    height: 400px;
+    background-color: indianred;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+  }
+  &__designations {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-bottom: 2px solid black;
+    padding-bottom: 30px;
+    h3 {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+}
+
+
+.tableDesignations-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  &__square {
+    width: 30px;
+    height: 30px;
+    background-color: #66afe9;
+  }
+
+  &__name {
+
+  }
+}

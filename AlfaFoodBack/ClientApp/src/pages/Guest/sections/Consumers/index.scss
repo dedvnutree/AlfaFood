@@ -1,0 +1,64 @@
+.consumersSection {
+  &__wrapper {
+    margin: 0 auto;
+    padding: 60px 0;
+  }
+
+  &__title {
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  &__items {
+    margin: 40px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 900px;
+    gap: 5px;
+  }
+
+  &__item {
+    position: relative;
+    background: #cccccc;
+    border-radius: 10px;
+    height: 140px;
+    width: 260px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color .3s ease;
+    &:hover {
+      background: #66afe9;
+    }
+
+    img {
+      width: auto;
+    }
+    &-span {
+      //margin: 0 0 12px 0;
+    }
+    &-span-wrap {
+      text-align: center;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      color: blue;
+      z-index: 5;
+      height: 24px;
+      width: 100px;
+      background-color: #cccccc;
+    }
+  }
+  &__choose {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 22px;
+    strong {
+      font-size: 30px;
+      font-weight: 700;
+    }
+    &-logo {
+      font-weight: 700;
+      font-size: 26px;
+    }
+  }
+}

@@ -1,0 +1,49 @@
+.capabilitiesSection {
+  &__section {
+    padding: 80px 0;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    row-gap: 70px;
+  }
+
+  &__subsection {
+    margin: 20px 0;
+    display: flex;
+    gap: 6em;
+
+    &-image {
+      background: #0E0E0E;
+      width: 600px;
+      height: 275px;
+    }
+    &-text {
+      display: flex;
+      flex-direction: column;
+      row-gap: 30px;
+    }
+    &-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: orange;
+    }
+    &-descr {
+      font-size: 18px;
+    }
+
+  }
+}
+
+.subsection {
+  &--order {
+    justify-content: space-between;
+  }
+  &-image {
+    &--order {
+      order: 2
+    }
+  }
+
+}

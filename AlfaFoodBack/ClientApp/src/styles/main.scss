@@ -1,0 +1,24 @@
+@import "./utils/reset";
+@import "./utils/fonts.scss";
+
+
+.logo {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+}
+.logo-black {
+    color: black;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.content {
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.page-layout{
+    width:60%;
+    margin: auto;
+}

@@ -1,0 +1,60 @@
+
+
+.applications {
+  &__content {
+
+    margin: 0 auto;
+    max-width: 1200px;
+    height: calc(100vh - 60px);
+  }
+  &__container {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+  }
+
+  &__list {
+    padding-bottom: 50px;
+    border-right: 1px solid black;
+  }
+}
+
+.applications-list {
+  &__title {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+}
+
+.application-item {
+  &__wrapper {
+    padding: 12px 20px;
+  }
+  //&__name {
+  //  font-size: 16px;
+  //  font-weight: 500;
+  //}
+  &__link {
+    color: black;
+    &--active {
+      color: red;
+      font-weight: 700;
+    }
+  }
+}
+
+
+.add-application {
+  &__wrapper {
+    cursor: pointer;
+    text-align: center;
+    width: 180px;
+    padding: 10px 6px;
+    background: #66afe9;
+  }
+}
+
+
