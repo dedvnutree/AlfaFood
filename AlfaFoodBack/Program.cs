@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Ninject;
 
 namespace AlfaFoodBack
 {
     public class Program
     {
-        // хз, должны ли контроллеры быть в папке App 
         public static void Main(string[] args)
         {
+            // var container = new StandardKernel(); // не нашел применения 
             CreateHostBuilder(args).Build().Run();
         }
 

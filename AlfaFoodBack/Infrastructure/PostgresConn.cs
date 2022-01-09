@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace AlfaFoodBack
@@ -7,10 +8,14 @@ namespace AlfaFoodBack
     {
         public static NpgsqlConnection GetConn()
         {
+            var dbCon = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build()
+                .GetSection("AppSettings")["DBcon"];
             bool boolfound = false;
             NpgsqlConnection conn =
                 new NpgsqlConnection(
-                    @"Server=dumbo.db.elephantsql.com; User Id=tgenvxvp; Password=9Rb_1TwOJ18nG9TEEwIGywMhDhlwOzBI; Database=tgenvxvp"); //<ip> is an actual ip address
+                    dbCon); //<ip> is an actual ip address
             conn.Open();
             return conn;
         }
