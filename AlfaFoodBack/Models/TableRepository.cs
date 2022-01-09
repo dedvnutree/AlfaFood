@@ -7,7 +7,14 @@ namespace AlfaFoodBack.Models
 {
     public class TableRepository:IRepository
     {
-        public void Insert(NpgsqlConnection dbCon, IDbEntity entity)
+        private NpgsqlConnection dbCon;
+
+        public TableRepository()
+        {
+            dbCon = PostgresConn.GetConn();
+        }
+        
+        public void Insert(IDbEntity entity)
         {
             var table = entity as Table;
             var command = dbCon.CreateCommand();
@@ -18,7 +25,7 @@ namespace AlfaFoodBack.Models
             command.ExecuteNonQuery();
         }
 
-        public IEnumerable<Table> GetByRestaurantId(NpgsqlConnection dbCon, Guid restaurantId)
+        public IEnumerable<Table> GetByRestaurantId(Guid restaurantId)
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -39,9 +46,14 @@ namespace AlfaFoodBack.Models
             }
         }
         
-        public void Update(NpgsqlConnection dbCon, IDbEntity entity)
+        public void Update(IDbEntity entity)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            dbCon?.Dispose();
         }
     }
 }

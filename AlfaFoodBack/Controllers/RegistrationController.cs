@@ -32,17 +32,17 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 user = new User(email, password, username, phone, role);
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new UserRepository())
                 {
-                    new UserRepository().Insert(dbCon, user);
+                    repo.Insert(user);
                     Response.StatusCode = 201;
                 }
 
                 Console.WriteLine("insert");
 
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new UserRepository())
                 {
-                    user = UserRepository.IsAuth(email, password, dbCon);
+                    user = repo.IsAuth(email, password);
                 }
                 
                 Console.WriteLine("get");
@@ -89,14 +89,14 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 user = new User(email, password, username, phone, role);
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new UserRepository())
                 {
-                    new UserRepository().Insert(dbCon, user);
+                    repo.Insert( user);
                     Response.StatusCode = 201;
                 }
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new UserRepository())
                 {
-                    user = UserRepository.IsAuth(email, password, dbCon);
+                    user = repo.IsAuth(email, password);
                 }
                 var now = DateTime.UtcNow;
                 var claims = new List<Claim>();

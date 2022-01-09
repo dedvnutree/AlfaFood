@@ -66,9 +66,9 @@ namespace AlfaFoodBack.Controllers
             var password = dict["password"].ToString();
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo =new UserRepository())
                 {
-                    var user = UserRepository.IsAuth(email, password, dbCon);
+                    var user = repo.IsAuth(email, password);
                     
                     if (user == null)
                     {
@@ -120,9 +120,9 @@ namespace AlfaFoodBack.Controllers
             var password = dict["password"].ToString();
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo =new UserRepository())
                 {
-                    var user = UserRepository.IsAuth(email, password, dbCon);
+                    var user = repo.IsAuth(email, password);
                     if (user == null)
                     {
                         Response.StatusCode = 400;

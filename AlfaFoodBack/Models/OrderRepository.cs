@@ -6,7 +6,13 @@ namespace AlfaFoodBack.Models
 {
     public class OrderRepository: IRepository
     {
-        public void Insert(NpgsqlConnection dbCon, IDbEntity entity)
+        private NpgsqlConnection dbCon;
+
+        public OrderRepository()
+        {
+            dbCon = PostgresConn.GetConn();
+        }
+        public void Insert(IDbEntity entity)
         {
             var order = entity as Order;
             var command = dbCon.CreateCommand();
@@ -18,22 +24,24 @@ namespace AlfaFoodBack.Models
             command.ExecuteNonQuery();
             foreach (var dishesId in order.DishesIds)
             {
-                using (var con = PostgresConn.GetConn())
-                {
-                    command = con.CreateCommand();
+                    command = dbCon.CreateCommand();
                     command.CommandType = CommandType.Text;
                     command.CommandText =
                         $"INSERT INTO public.orderswithdishes (\"orderId\", \"dishId\") " +
                         $"VALUES" +
                         $" ('{order.Id}', '{dishesId}' )";
                     command.ExecuteNonQuery();
-                }
             }
         }
 
-        public void Update(NpgsqlConnection dbCon, IDbEntity entity)
+        public void Update(IDbEntity entity)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            dbCon?.Dispose();
         }
     }
 }

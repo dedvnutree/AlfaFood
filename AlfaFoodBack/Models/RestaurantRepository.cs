@@ -7,7 +7,13 @@ namespace AlfaFoodBack.Models
 {
     public class RestaurantRepository : IRepository
     {
-        public void Insert(NpgsqlConnection dbCon, IDbEntity entity)
+        private NpgsqlConnection dbCon;
+
+        public RestaurantRepository()
+        {
+            dbCon = PostgresConn.GetConn();
+        }
+        public void Insert(IDbEntity entity)
         {
             var restaurant = entity as Restaurant;
             var command = dbCon.CreateCommand();
@@ -20,7 +26,7 @@ namespace AlfaFoodBack.Models
             command.ExecuteNonQuery();
         }
 
-        public void Delete(NpgsqlConnection dbCon, Guid id)
+        public void Delete(Guid id)
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -28,7 +34,7 @@ namespace AlfaFoodBack.Models
             command.ExecuteNonQuery();
         }
         
-        public void Update(NpgsqlConnection dbCon, IDbEntity entity)
+        public void Update(IDbEntity entity)
         {
             var restaurant = entity as Restaurant;
             var command = dbCon.CreateCommand();
@@ -44,7 +50,7 @@ namespace AlfaFoodBack.Models
             command.ExecuteNonQuery();
         }
 
-        public IDbEntity GetById(NpgsqlConnection dbCon, Guid id)
+        public IDbEntity GetById(Guid id)
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -80,7 +86,7 @@ namespace AlfaFoodBack.Models
             return new Restaurant(businessId, name, city, address, description, ownerId, phone, workingTime, published, id, email, imageMap);
         }
 
-        public IEnumerable<IDbEntity> GetByOwnerId(NpgsqlConnection dbCon, int ownerId)
+        public IEnumerable<IDbEntity> GetByOwnerId(int ownerId)
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -117,7 +123,7 @@ namespace AlfaFoodBack.Models
             reader.Close();
         }
 
-        public IEnumerable<IDbEntity> GetAllRestaurants(NpgsqlConnection dbCon)
+        public IEnumerable<IDbEntity> GetAllRestaurants()
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -155,7 +161,7 @@ namespace AlfaFoodBack.Models
             reader.Close();
         }
 
-        public IEnumerable<IDbEntity> GetInCity(NpgsqlConnection dbCon, string cityName)
+        public IEnumerable<IDbEntity> GetInCity(string cityName)
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -189,6 +195,11 @@ namespace AlfaFoodBack.Models
 
                 yield return new Restaurant(businessId, name, city, address, description, ownerId, phone, workingTime, published, id, email, imageMap);
             }
+        }
+
+        public void Dispose()
+        {
+            dbCon?.Dispose();
         }
     }
 }

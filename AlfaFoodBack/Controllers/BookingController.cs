@@ -21,15 +21,14 @@ namespace AlfaFoodBack.Controllers
         [HttpGet("{restaurantId:Guid}")]
         public async void GetBooking(Guid restaurantId)
         {
-            
             try
             {
                 var filePath =
                     Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) + $"Images\\{restaurantId}.svg";
                 await Response.SendFileAsync(filePath);
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo =new TableRepository())
                 {
-                    var tables = new TableRepository().GetByRestaurantId(dbCon, restaurantId);
+                    var tables = repo.GetByRestaurantId(restaurantId);
                     var tablesInfo = new List<(string id, string name, bool isFree)>();
                     foreach (var table in tables)
                     {

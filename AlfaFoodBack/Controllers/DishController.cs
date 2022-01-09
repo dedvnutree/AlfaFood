@@ -32,7 +32,7 @@ namespace AlfaFoodBack.Controllers
 
             var image = Request.Form.Files.GetFile("image");
 
-            //byte[] fileBytes; преобразование картинки в массив байтов
+            //byte[] fileBytes; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             //using (var memoryStream = new MemoryStream())
             //{
             //    await image.CopyToAsync(memoryStream);
@@ -43,13 +43,13 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 var dish = new Dish(name, ingredients, price, weightInGrams, Guid.Parse(restaurantId.ToString()));
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new DishRepository())
                 {
-                    new DishRepository().Insert(dbCon, dish);
+                    repo.Insert(dish);
                 }
 
                 var filePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) + $"Images\\DISH{restaurantId + name}.jpg";
-                using (var stream = System.IO.File.Create(filePath)) // СОХРАНЕНИЕ КАРТИНКИ В ФАЙЛАХ
+                using (var stream = System.IO.File.Create(filePath)) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                 {
                     await image.CopyToAsync(stream);
                 }
@@ -68,9 +68,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo =new DishRepository())
                 {
-                    var dishAsDBEntity = new DishRepository().GetById(dbCon, dishId);
+                    var dishAsDBEntity = repo.GetById(dishId);
                     var serializerSettings = new JsonSerializerSettings();
                     serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     var json = JsonConvert.SerializeObject(dishAsDBEntity, serializerSettings);

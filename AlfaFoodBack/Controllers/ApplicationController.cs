@@ -20,9 +20,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    var restaurant = new RestaurantRepository().GetById(dbCon, id);
+                    var restaurant = repo.GetById(id);
                     var serializerSettings = new JsonSerializerSettings();
                     serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     var json = JsonConvert.SerializeObject(restaurant, serializerSettings);
@@ -46,17 +46,17 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 Restaurant restaurant = null;
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    restaurant = new RestaurantRepository().GetById(dbCon, id) as Restaurant;
+                    restaurant = repo.GetById(id) as Restaurant;
                     if (restaurant.Published)
                         throw new Exception("Restaurant has already published");
                     restaurant.Published = true;
                 }
 
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    new RestaurantRepository().Update(dbCon, restaurant);
+                    repo.Update(restaurant);
                 }
                 
                 var queryParams = Request.QueryString.Value.Trim('?').Split('&');
@@ -64,9 +64,9 @@ namespace AlfaFoodBack.Controllers
                 {
                     var parts = param.Split('=');
                     var table = new Table(id, true, parts[1], parts[0]);
-                    using (var dbCon = PostgresConn.GetConn())
+                    using (var repo = new TableRepository())
                     {
-                        new TableRepository().Insert(dbCon, table);
+                        repo.Insert(table);
                     }
                 }
                 var files = Request.Form.Files;

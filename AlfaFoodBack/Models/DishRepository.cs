@@ -7,7 +7,13 @@ namespace AlfaFoodBack.Models
 {
     public class DishRepository:IRepository
     {
-        public void Insert(NpgsqlConnection dbCon, IDbEntity entity)
+        private NpgsqlConnection dbCon;
+
+        public DishRepository()
+        {
+            dbCon = PostgresConn.GetConn();
+        }
+        public void Insert(IDbEntity entity)
         {
             var dish = entity as Dish;
             var command = dbCon.CreateCommand();
@@ -18,7 +24,7 @@ namespace AlfaFoodBack.Models
             command.ExecuteNonQuery();
         }
 
-        public void Update(NpgsqlConnection dbCon, IDbEntity entity)
+        public void Update(IDbEntity entity)
         {
             var dish = entity as Dish;
             var command = dbCon.CreateCommand();
@@ -31,7 +37,7 @@ namespace AlfaFoodBack.Models
             command.ExecuteNonQuery();
         }
 
-        public IDbEntity GetById(NpgsqlConnection dbCon, int id)
+        public IDbEntity GetById(int id)
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -57,7 +63,7 @@ namespace AlfaFoodBack.Models
             return new Dish(name, ingredients, price, weightInGrams, restaurantId, image, id);
         }
 
-        public IEnumerable<IDbEntity> GetInRestaurant(NpgsqlConnection dbCon, Guid restaurantId)
+        public IEnumerable<IDbEntity> GetInRestaurant(Guid restaurantId)
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -82,6 +88,11 @@ namespace AlfaFoodBack.Models
             }
 
             reader.Close();
+        }
+
+        public void Dispose()
+        {
+            dbCon?.Dispose();
         }
     }
 }

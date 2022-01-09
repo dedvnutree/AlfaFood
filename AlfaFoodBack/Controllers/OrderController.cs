@@ -32,16 +32,11 @@ namespace AlfaFoodBack.Controllers
             {
                 order = new Order(userId, restaurantId, tableId, timeToGet, dishesIds);
                 Console.WriteLine(order);
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new OrderRepository())
                 {
-                    if(dbCon == null)
-                        Console.WriteLine("null");
-                    new OrderRepository().Insert(dbCon, order);
-                    Console.WriteLine("insert");
+                    repo.Insert(order);
                     Response.StatusCode = 201;
                 }
-
-                Console.WriteLine("insert");
             }
             catch (Exception e)
             {

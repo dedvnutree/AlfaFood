@@ -6,14 +6,17 @@ namespace AlfaFoodBack.Models
 {
     public class UserRepository : IRepository
     {
-        public void Insert(NpgsqlConnection dbCon, IDbEntity entity)
+        private NpgsqlConnection dbCon;
+
+        public UserRepository()
+        {
+            dbCon = PostgresConn.GetConn();
+        }
+        public void Insert(IDbEntity entity)
         {
             var user = entity as User;
-            using (var con = PostgresConn.GetConn())
-            {
-                if (UserWithLoginExists(con, user.Email))
-                    throw new Exception("User exists");
-            }
+            if (UserWithLoginExists(user.Email)) 
+                throw new Exception("User exists");
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText =
@@ -21,17 +24,17 @@ namespace AlfaFoodBack.Models
             command.ExecuteNonQuery();
         }
 
-        public void Update(NpgsqlConnection dbCon, IDbEntity entity)
+        public void Update(IDbEntity entity)
         {
             throw new NotImplementedException();
         }
 
-        public IDbEntity GetById(NpgsqlConnection dbCon, int id)
+        public IDbEntity GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public static User IsAuth(string login, string password, NpgsqlConnection dbCon)
+        public User IsAuth(string login, string password)
         {
             var passHash = Encryptor.GetHashString(password);
             var command = dbCon.CreateCommand();
@@ -51,13 +54,18 @@ namespace AlfaFoodBack.Models
             return new User(login, password, username, phone, role, id);
         }
 
-        public bool UserWithLoginExists(NpgsqlConnection dbCon, string login)
+        public bool UserWithLoginExists(string login)
         {
             var command = dbCon.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = $"SELECT FROM \"public\".\"users\" Where email='{login}';";
             var result = command.ExecuteReader();
             return result.HasRows;
+        }
+
+        public void Dispose()
+        {
+            dbCon?.Dispose();
         }
     }
 }

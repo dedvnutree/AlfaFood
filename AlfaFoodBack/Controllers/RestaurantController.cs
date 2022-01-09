@@ -34,9 +34,9 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 var restaurant = new Restaurant(businessId, name, city, address, description, ownerId,  phoneNumber, workingTime, false, email); 
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    new RestaurantRepository().Insert(dbCon, restaurant);
+                    repo.Insert(restaurant);
                 }
 
                 if (!Response.HasStarted) Response.StatusCode = 201;
@@ -91,9 +91,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    var restaurants = new RestaurantRepository().GetAllRestaurants(dbCon);
+                    var restaurants = repo.GetAllRestaurants();
                     var serializerSettings = new JsonSerializerSettings();
                     serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
@@ -118,9 +118,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    var restaurantAsDBEntity = new RestaurantRepository().GetById(dbCon, restaurantId);
+                    var restaurantAsDBEntity = repo.GetById(restaurantId);
                     var serializerSettings = new JsonSerializerSettings();
                     serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     var json = JsonConvert.SerializeObject(restaurantAsDBEntity, serializerSettings);
@@ -140,7 +140,7 @@ namespace AlfaFoodBack.Controllers
             catch (Exception e)
             {
                 //if (!Response.HasStarted) Response.StatusCode = 400; //кидало ошибку, поэтому закомментил
-                //await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(e.Message));
+                //await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(e.Message)); // хз как пофиксить
             }
         }
 
@@ -149,9 +149,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    var restaurants = new RestaurantRepository().GetByOwnerId(dbCon, ownerId);
+                    var restaurants = repo.GetByOwnerId(ownerId);
                     var serializerSettings = new JsonSerializerSettings();
                     serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
@@ -175,9 +175,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    new RestaurantRepository().Delete(dbCon, id);
+                    new RestaurantRepository().Delete(id);
                 }
             }
             catch (Exception e)
@@ -194,9 +194,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new RestaurantRepository())
                 {
-                    var restaurants = new RestaurantRepository().GetInCity(dbCon, cityName);
+                    var restaurants = repo.GetInCity(cityName);
                     var serializerSettings = new JsonSerializerSettings();
                     serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
@@ -220,9 +220,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo = new DishRepository())
                 {
-                    var dishes = new DishRepository().GetInRestaurant(dbCon, restaurantId);
+                    var dishes = repo.GetInRestaurant(restaurantId);
                     var serializerSettings = new JsonSerializerSettings();
                     serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     var json = JsonConvert.SerializeObject(dishes, serializerSettings);

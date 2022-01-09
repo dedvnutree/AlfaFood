@@ -26,9 +26,9 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var dbCon = PostgresConn.GetConn())
+                using (var repo =new RestaurantRepository())
                 {
-                    var restaurants = new RestaurantRepository().GetByOwnerId(dbCon, userId);
+                    var restaurants = repo.GetByOwnerId(userId);
                     var json = JsonConvert.SerializeObject(restaurants);
                     await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
                     Response.StatusCode = 200;
