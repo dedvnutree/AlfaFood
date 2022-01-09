@@ -18,7 +18,7 @@ namespace SignalRApp
             using (var dbCon = PostgresConn.GetConn())
             {
                 var command = dbCon.CreateCommand();
-                command.CommandType = CommandType.Text;
+                command.CommandType = CommandType.Text; // я не знаю, зачем мы тут получаем неопубликованные рестораны
                 command.CommandText = @"SELECT * FROM ""public"".""restaurants"" WHERE published=false";
                 var reader = command.ExecuteReader();
                 if (!reader.HasRows)

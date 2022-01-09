@@ -5,6 +5,7 @@ namespace AlfaFoodBack
 {
     public class Program
     {
+        // хз, должны ли контроллеры быть в папке App 
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
