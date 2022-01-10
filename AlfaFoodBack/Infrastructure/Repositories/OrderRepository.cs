@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using Npgsql;
 
 namespace AlfaFoodBack.Models
 {
     public class OrderRepository: IRepository
     {
-        private NpgsqlConnection dbCon;
+        private IDbConnections dbConnection;
+        private DbConnection dbCon;
+
+        public OrderRepository(IDbConnections connection)
+        {
+            dbConnection = connection;
+        }
 
         public void Insert(IDbEntity entity)
         {
             var order = entity as Order;
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;

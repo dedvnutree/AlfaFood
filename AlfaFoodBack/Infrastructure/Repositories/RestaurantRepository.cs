@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using Npgsql;
 
 namespace AlfaFoodBack.Models
 {
     public class RestaurantRepository : IRepository
     {
-        private NpgsqlConnection dbCon;
+        private IDbConnections dbConnection;
+        private DbConnection dbCon;
 
+        public RestaurantRepository(IDbConnections connection)
+        {
+            dbConnection = connection;
+        }
         public void Insert(IDbEntity entity)
         {
             var restaurant = entity as Restaurant;
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -27,7 +33,7 @@ namespace AlfaFoodBack.Models
 
         public void Delete(Guid id)
         {
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -39,7 +45,7 @@ namespace AlfaFoodBack.Models
         public void Update(IDbEntity entity)
         {
             var restaurant = entity as Restaurant;
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -57,7 +63,7 @@ namespace AlfaFoodBack.Models
 
         public IDbEntity GetById(Guid id)
         {
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -97,7 +103,7 @@ namespace AlfaFoodBack.Models
 
         public IEnumerable<IDbEntity> GetByOwnerId(int ownerId)
         {
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -138,7 +144,7 @@ namespace AlfaFoodBack.Models
 
         public IEnumerable<IDbEntity> GetAllRestaurants()
         {
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -180,7 +186,7 @@ namespace AlfaFoodBack.Models
 
         public IEnumerable<IDbEntity> GetInCity(string cityName)
         {
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -221,7 +227,7 @@ namespace AlfaFoodBack.Models
         public List<(string, Guid)> GetUnpublishedRestNamesAndIds()
         {
             var restaurants = new List<(string, Guid)>();
-            using (var dbCon = PostgresConn.GetConn())
+            using (var dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text; // я не знаю, зачем мы тут получаем неопубликованные рестораны

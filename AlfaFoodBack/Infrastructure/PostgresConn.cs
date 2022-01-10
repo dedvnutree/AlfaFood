@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Data.Common;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace AlfaFoodBack
 {
-    public static class PostgresConn
+    public class PostgresConn:IDbConnections
     {
-        public static NpgsqlConnection GetConn()
+        public DbConnection GetConn()
         {
             var dbCon = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")

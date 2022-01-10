@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using Npgsql;
 
 namespace AlfaFoodBack.Models
 {
     public class UserRepository : IRepository
     {
-        private NpgsqlConnection dbCon;
+        private IDbConnections dbConnection;
+        private DbConnection dbCon;
+
+        public UserRepository(IDbConnections connection)
+        {
+            dbConnection = connection;
+        }
 
         public void Insert(IDbEntity entity)
         {
             var user = entity as User;
             if (UserWithLoginExists(user.Email)) 
                 throw new Exception("User exists");
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -36,7 +43,7 @@ namespace AlfaFoodBack.Models
         public User IsAuth(string login, string password)
         {
             var passHash = Encryptor.GetHashString(password);
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 Console.WriteLine(passHash);
@@ -58,7 +65,7 @@ namespace AlfaFoodBack.Models
 
         public bool UserWithLoginExists(string login)
         {
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;

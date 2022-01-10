@@ -165,7 +165,7 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                new RestaurantRepository().Delete(id);
+                repo.Delete(id); 
             }
             catch (Exception e)
             {
@@ -204,7 +204,7 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                var repo = new DishRepository();
+                var repo = new DishRepository(new PostgresConn());
                 var dishes = repo.GetInRestaurant(restaurantId);
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();

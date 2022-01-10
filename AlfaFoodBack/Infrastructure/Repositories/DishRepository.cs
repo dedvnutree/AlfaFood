@@ -2,17 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 
 namespace AlfaFoodBack.Models
 {
     public class DishRepository:IRepository
     {
-        private NpgsqlConnection dbCon;
+        private IDbConnections dbConnection;
+        private DbConnection dbCon;
 
+        public DishRepository(IDbConnections connection)
+        {
+            dbConnection = connection;
+        }
+        
         public void Insert(IDbEntity entity)
         {
             var dish = entity as Dish;
-            using (dbCon = PostgresConn.GetConn())
+            using (var dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -26,7 +33,7 @@ namespace AlfaFoodBack.Models
         public void Update(IDbEntity entity)
         {
             var dish = entity as Dish;
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -41,7 +48,7 @@ namespace AlfaFoodBack.Models
 
         public IDbEntity GetById(int id)
         {
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
@@ -73,7 +80,7 @@ namespace AlfaFoodBack.Models
 
         public IEnumerable<IDbEntity> GetInRestaurant(Guid restaurantId)
         {
-            using (dbCon = PostgresConn.GetConn())
+            using (dbCon = dbConnection.GetConn())
             {
                 var command = dbCon.CreateCommand();
                 command.CommandType = CommandType.Text;
