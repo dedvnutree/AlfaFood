@@ -33,11 +33,10 @@ namespace AlfaFoodBack.Controllers
 
             try
             {
-                var restaurant = new Restaurant(businessId, name, city, address, description, ownerId,  phoneNumber, workingTime, false, email); 
-                using (var repo = new RestaurantRepository())
-                {
-                    repo.Insert(restaurant);
-                }
+                var restaurant = new Restaurant(businessId, name, city, address, description, ownerId, phoneNumber,
+                    workingTime, false, email);
+                var repo = new RestaurantRepository();
+                repo.Insert(restaurant);
 
                 if (!Response.HasStarted) Response.StatusCode = 201;
                 await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(restaurant.Id.ToString()));
@@ -52,16 +51,10 @@ namespace AlfaFoodBack.Controllers
         [HttpPost("add/image/{id}")]
         public async void AddImage(string id, [FromForm] IFormFile image)
         {
-            //byte[] fileBytes;
-            //using (var memoryStream = new MemoryStream())  // ЗАКОММЕНТИРОВАНО ПОТОМУ ЧТО решили сохранаять не в бд, а в файлах
-            //{
-            //    await image.CopyToAsync(memoryStream);
-            //    fileBytes = memoryStream.ToArray();
-            //}
-
             try
             {
-                var filePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) + $"Images\\MAP{id}.jpg";
+                var filePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) +
+                               $"Images\\MAP{id}.jpg";
                 using (var stream = System.IO.File.Create(filePath)) // СОХРАНЕНИЕ КАРТИНКИ В ФАЙЛАХ
                 {
                     await image.CopyToAsync(stream);
@@ -74,7 +67,8 @@ namespace AlfaFoodBack.Controllers
                 //    new RestaurantRepository().Update(dbCon, restaurant);
                 //}
 
-                if (!Response.HasStarted) Response.StatusCode = 200; // кидает ошибку, в тело ничего не пишет, поэтому ексепш закомментирован
+                if (!Response.HasStarted)
+                    Response.StatusCode = 200; // кидает ошибку, в тело ничего не пишет, поэтому ексепш закомментирован
                 //await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(restaurant.Id.ToString()));
             }
             catch (Exception e)
@@ -82,7 +76,6 @@ namespace AlfaFoodBack.Controllers
                 //if (!Response.HasStarted) Response.StatusCode = 400;
                 //await Response.WriteAsync(e.Message);
             }
-
         }
 
 
@@ -91,20 +84,18 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var repo = new RestaurantRepository())
-                {
-                    var restaurants = repo.GetAllRestaurants();
-                    var serializerSettings = new JsonSerializerSettings();
-                    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
-                    
-                    if (!Response.HasStarted) Response.StatusCode = 200;
+                var repo = new RestaurantRepository();
+                var restaurants = repo.GetAllRestaurants();
+                var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
 
-                    if (json.Contains("[null]"))
-                        await Response.Body.WriteAsync(new byte[] { });
-                    else
-                        await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
-                }
+                if (!Response.HasStarted) Response.StatusCode = 200;
+
+                if (json.Contains("[null]"))
+                    await Response.Body.WriteAsync(new byte[] { });
+                else
+                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
             }
             catch (Exception e)
             {
@@ -118,24 +109,23 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var repo = new RestaurantRepository())
-                {
-                    var restaurantAsDBEntity = repo.GetById(restaurantId);
-                    var serializerSettings = new JsonSerializerSettings();
-                    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    var json = JsonConvert.SerializeObject(restaurantAsDBEntity, serializerSettings);
-                    if (!Response.HasStarted) Response.StatusCode = 200;
+                var repo = new RestaurantRepository();
+                var restaurantAsDBEntity = repo.GetById(restaurantId);
+                var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                var json = JsonConvert.SerializeObject(restaurantAsDBEntity, serializerSettings);
+                if (!Response.HasStarted) Response.StatusCode = 200;
 
-                    if (json.Contains("[null]"))
-                        await Response.Body.WriteAsync(new byte[] { });
-                    else
-                        await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
+                if (json.Contains("[null]"))
+                    await Response.Body.WriteAsync(new byte[] { });
+                else
+                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
 
-                    var restaurant = restaurantAsDBEntity as Restaurant;
-                    var filePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) + $"Images\\MAP{restaurant.Id}.jpg";
-                    await Response.SendFileAsync(filePath);
-                }
-
+                var restaurant = restaurantAsDBEntity as Restaurant;
+                var filePath =
+                    Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) +
+                    $"Images\\MAP{restaurant.Id}.jpg";
+                await Response.SendFileAsync(filePath);
             }
             catch (Exception e)
             {
@@ -149,19 +139,17 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var repo = new RestaurantRepository())
-                {
-                    var restaurants = repo.GetByOwnerId(ownerId);
-                    var serializerSettings = new JsonSerializerSettings();
-                    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
-                    if (!Response.HasStarted) Response.StatusCode = 200;
+                var repo = new RestaurantRepository();
+                var restaurants = repo.GetByOwnerId(ownerId);
+                var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
+                if (!Response.HasStarted) Response.StatusCode = 200;
 
-                    if (json.Contains("[null]"))
-                        await Response.Body.WriteAsync(new byte[] { });
-                    else
-                        await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
-                }
+                if (json.Contains("[null]"))
+                    await Response.Body.WriteAsync(new byte[] { });
+                else
+                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
             }
             catch (Exception e)
             {
@@ -175,10 +163,8 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var repo = new RestaurantRepository())
-                {
-                    new RestaurantRepository().Delete(id);
-                }
+                var repo = new RestaurantRepository();
+                new RestaurantRepository().Delete(id);
             }
             catch (Exception e)
             {
@@ -187,26 +173,24 @@ namespace AlfaFoodBack.Controllers
                 throw;
             }
         }
-        
+
 
         [HttpGet("city/{cityName}")]
         public async void GetRestaurantsInCity(string cityName)
         {
             try
             {
-                using (var repo = new RestaurantRepository())
-                {
-                    var restaurants = repo.GetInCity(cityName);
-                    var serializerSettings = new JsonSerializerSettings();
-                    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
-                    if (!Response.HasStarted) Response.StatusCode = 200;
+                var repo = new RestaurantRepository();
+                var restaurants = repo.GetInCity(cityName);
+                var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                var json = JsonConvert.SerializeObject(restaurants, serializerSettings);
+                if (!Response.HasStarted) Response.StatusCode = 200;
 
-                    if (json.Contains("[null]"))
-                        await Response.Body.WriteAsync(new byte[] { });
-                    else
-                        await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
-                }
+                if (json.Contains("[null]"))
+                    await Response.Body.WriteAsync(new byte[] { });
+                else
+                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
             }
             catch (Exception e)
             {
@@ -220,20 +204,18 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var repo = new DishRepository())
-                {
-                    var dishes = repo.GetInRestaurant(restaurantId);
-                    var serializerSettings = new JsonSerializerSettings();
-                    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    var json = JsonConvert.SerializeObject(dishes, serializerSettings);
-                    if (!Response.HasStarted) Response.StatusCode = 200;
+                var repo = new DishRepository();
+                var dishes = repo.GetInRestaurant(restaurantId);
+                var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                var json = JsonConvert.SerializeObject(dishes, serializerSettings);
+                if (!Response.HasStarted) Response.StatusCode = 200;
 
 
-                    if (json.Contains("[null]"))
-                        await Response.Body.WriteAsync(new byte[] { });
-                    else
-                        await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
-                }
+                if (json.Contains("[null]"))
+                    await Response.Body.WriteAsync(new byte[] { });
+                else
+                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
             }
             catch (Exception e)
             {

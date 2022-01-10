@@ -32,24 +32,18 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 user = new User(email, password, username, phone, role);
-                using (var repo = new UserRepository())
-                {
-                    repo.Insert(user);
-                    Response.StatusCode = 201;
-                }
+                var repo = new UserRepository();
+                repo.Insert(user);
+                Response.StatusCode = 201;
 
-                Console.WriteLine("insert");
+                Console.WriteLine("inserted");
+                user = repo.IsAuth(email, password);
 
-                using (var repo = new UserRepository())
-                {
-                    user = repo.IsAuth(email, password);
-                }
-                
                 Console.WriteLine("get");
                 var now = DateTime.UtcNow;
                 var claims = new List<Claim>();
                 claims.Add(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email));
-                
+
                 claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role));
                 var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
@@ -57,7 +51,8 @@ namespace AlfaFoodBack.Controllers
                     notBefore: now,
                     claims: claims,
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                        SecurityAlgorithms.HmacSha256));
                 var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -65,7 +60,6 @@ namespace AlfaFoodBack.Controllers
                 Console.WriteLine(json);
                 Response.Cookies.Append("token", encodedJwt);
                 await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
-                
             }
             catch (Exception e)
             {
@@ -73,7 +67,7 @@ namespace AlfaFoodBack.Controllers
                 await Response.WriteAsync(e.Message);
             }
         }
-        
+
 
         [HttpPost("jur")]
         public async void RegisterJur(object data)
@@ -89,15 +83,11 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 user = new User(email, password, username, phone, role);
-                using (var repo = new UserRepository())
-                {
-                    repo.Insert( user);
-                    Response.StatusCode = 201;
-                }
-                using (var repo = new UserRepository())
-                {
-                    user = repo.IsAuth(email, password);
-                }
+                var repo = new UserRepository();
+                repo.Insert(user);
+                Response.StatusCode = 201;
+                user = repo.IsAuth(email, password);
+
                 var now = DateTime.UtcNow;
                 var claims = new List<Claim>();
                 claims.Add(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email));
@@ -108,14 +98,14 @@ namespace AlfaFoodBack.Controllers
                     notBefore: now,
                     claims: claims,
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                        SecurityAlgorithms.HmacSha256));
                 var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 var json = JsonConvert.SerializeObject(user, serializerSettings);
                 Response.Cookies.Append("token", encodedJwt);
                 await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
-                
             }
             catch (Exception e)
             {

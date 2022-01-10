@@ -20,18 +20,14 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                using (var repo = new RestaurantRepository())
-                {
-                    var restaurant = repo.GetById(id);
-                    var serializerSettings = new JsonSerializerSettings();
-                    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    var json = JsonConvert.SerializeObject(restaurant, serializerSettings);
-                    Response.StatusCode = 200;
-
-                    if (!(restaurant == null || json.Contains("[null]")))
-                        await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
-                }
-
+                var repo = new RestaurantRepository();
+                var restaurant = repo.GetById(id); 
+                var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); 
+                var json = JsonConvert.SerializeObject(restaurant, serializerSettings); 
+                Response.StatusCode = 200;
+                if (!(restaurant == null || json.Contains("[null]"))) 
+                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));
             }
             catch (Exception e)
             {
@@ -46,28 +42,20 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 Restaurant restaurant = null;
-                using (var repo = new RestaurantRepository())
-                {
-                    restaurant = repo.GetById(id) as Restaurant;
-                    if (restaurant.Published)
-                        throw new Exception("Restaurant has already published");
-                    restaurant.Published = true;
-                }
-
-                using (var repo = new RestaurantRepository())
-                {
-                    repo.Update(restaurant);
-                }
+                var repo = new RestaurantRepository();
+                restaurant = repo.GetById(id) as Restaurant; 
+                if (restaurant.Published) 
+                    throw new Exception("Restaurant has already published");
+                restaurant.Published = true;
+                repo.Update(restaurant);
                 
                 var queryParams = Request.QueryString.Value.Trim('?').Split('&');
                 foreach (var param in queryParams)
                 {
                     var parts = param.Split('=');
                     var table = new Table(id, true, parts[1], parts[0]);
-                    using (var repo = new TableRepository())
-                    {
-                        repo.Insert(table);
-                    }
+                    
+                    repo.Insert(table);
                 }
                 var files = Request.Form.Files;
                 foreach (var formFile in files)

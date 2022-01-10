@@ -3,7 +3,7 @@ using Npgsql;
 
 namespace AlfaFoodBack.Models
 {
-    public interface IRepository: IDisposable
+    public interface IRepository
     {
         public void Insert(IDbEntity entity);
         public void Update(IDbEntity entity);

@@ -24,21 +24,20 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 var filePath =
-                    Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) + $"Images\\{restaurantId}.svg";
+                    Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) +
+                    $"Images\\{restaurantId}.svg";
                 await Response.SendFileAsync(filePath);
-                using (var repo =new TableRepository())
+                var repo = new TableRepository();
+                var tables = repo.GetByRestaurantId(restaurantId);
+                var tablesInfo = new List<(string id, string name, bool isFree)>();
+                foreach (var table in tables)
                 {
-                    var tables = repo.GetByRestaurantId(restaurantId);
-                    var tablesInfo = new List<(string id, string name, bool isFree)>();
-                    foreach (var table in tables)
-                    {
-                        tablesInfo.Add((table.TableId, table.Name, table.IsFree));
-                    }
-                    var json = JsonConvert.SerializeObject(tablesInfo);
-                    Console.WriteLine(json);
-                    await Response.WriteAsync(json);
+                    tablesInfo.Add((table.TableId, table.Name, table.IsFree));
                 }
 
+                var json = JsonConvert.SerializeObject(tablesInfo);
+                Console.WriteLine(json);
+                await Response.WriteAsync(json);
             }
             catch (Exception e)
             {

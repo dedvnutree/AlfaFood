@@ -32,11 +32,9 @@ namespace AlfaFoodBack.Controllers
             {
                 order = new Order(userId, restaurantId, tableId, timeToGet, dishesIds);
                 Console.WriteLine(order);
-                using (var repo = new OrderRepository())
-                {
-                    repo.Insert(order);
-                    Response.StatusCode = 201;
-                }
+                var repo = new OrderRepository();
+                repo.Insert(order);
+                Response.StatusCode = 201;
             }
             catch (Exception e)
             {
