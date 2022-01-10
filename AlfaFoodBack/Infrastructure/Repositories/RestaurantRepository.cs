@@ -217,5 +217,25 @@ namespace AlfaFoodBack.Models
                 }
             }
         }
+
+        public List<(string, Guid)> GetUnpublishedRestNamesAndIds()
+        {
+            var restaurants = new List<(string, Guid)>();
+            using (var dbCon = PostgresConn.GetConn())
+            {
+                var command = dbCon.CreateCommand();
+                command.CommandType = CommandType.Text; // я не знаю, зачем мы тут получаем неопубликованные рестораны
+                command.CommandText = @"SELECT * FROM ""public"".""restaurants"" WHERE published=false";
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var name = reader.GetString("name");
+                    var id = reader.GetGuid("id");
+                    restaurants.Add((name, id));
+                }
+            }
+
+            return restaurants;
+        }
     }
 }

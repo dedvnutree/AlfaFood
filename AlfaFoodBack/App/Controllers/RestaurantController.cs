@@ -15,6 +15,12 @@ namespace AlfaFoodBack.Controllers
     [Route("[controller]")]
     public class RestaurantController : Controller
     {
+        private RestaurantRepository repo;
+        public RestaurantController(RestaurantRepository repository)
+        {
+            repo = repository;
+        }
+        
         [HttpPost("add")]
         public async void AddRestaurant(object data)
         {
@@ -35,7 +41,6 @@ namespace AlfaFoodBack.Controllers
             {
                 var restaurant = new Restaurant(businessId, name, city, address, description, ownerId, phoneNumber,
                     workingTime, false, email);
-                var repo = new RestaurantRepository();
                 repo.Insert(restaurant);
 
                 if (!Response.HasStarted) Response.StatusCode = 201;
@@ -84,7 +89,6 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                var repo = new RestaurantRepository();
                 var restaurants = repo.GetAllRestaurants();
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -109,7 +113,6 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                var repo = new RestaurantRepository();
                 var restaurantAsDBEntity = repo.GetById(restaurantId);
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -139,7 +142,6 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                var repo = new RestaurantRepository();
                 var restaurants = repo.GetByOwnerId(ownerId);
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -163,7 +165,6 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                var repo = new RestaurantRepository();
                 new RestaurantRepository().Delete(id);
             }
             catch (Exception e)
@@ -180,7 +181,6 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                var repo = new RestaurantRepository();
                 var restaurants = repo.GetInCity(cityName);
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();

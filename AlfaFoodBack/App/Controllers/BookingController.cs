@@ -18,6 +18,12 @@ namespace AlfaFoodBack.Controllers
     [Route("[controller]")]
     public class BookingController : Controller
     {
+        private TableRepository repo;
+        public BookingController(TableRepository repository)
+        {
+            repo = repository;
+        }
+        
         [HttpGet("{restaurantId:Guid}")]
         public async void GetBooking(Guid restaurantId)
         {
@@ -27,7 +33,6 @@ namespace AlfaFoodBack.Controllers
                     Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) +
                     $"Images\\{restaurantId}.svg";
                 await Response.SendFileAsync(filePath);
-                var repo = new TableRepository();
                 var tables = repo.GetByRestaurantId(restaurantId);
                 var tablesInfo = new List<(string id, string name, bool isFree)>();
                 foreach (var table in tables)

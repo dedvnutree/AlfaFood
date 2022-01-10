@@ -15,12 +15,17 @@ namespace AlfaFoodBack.Controllers
     [Route("[controller]")]
     public class ApplicationController : Controller
     {
+        private RestaurantRepository repo;
+        public ApplicationController(RestaurantRepository repository)
+        {
+            repo = repository;
+        }
+        
         [HttpGet("{id:Guid}")]
         public async void GetApplication(Guid id)
         {
             try
             {
-                var repo = new RestaurantRepository();
                 var restaurant = repo.GetById(id); 
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); 
@@ -42,7 +47,6 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 Restaurant restaurant = null;
-                var repo = new RestaurantRepository();
                 restaurant = repo.GetById(id) as Restaurant; 
                 if (restaurant.Published) 
                     throw new Exception("Restaurant has already published");

@@ -15,6 +15,12 @@ namespace AlfaFoodBack.Controllers
     [Route("[controller]")]
     public class DishController : Controller
     {
+        private DishRepository repo;
+        public DishController(DishRepository repository)
+        {
+            repo = repository;
+        }
+        
         [HttpPost("add")]
         public async void AddDish()
         {
@@ -34,7 +40,6 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 var dish = new Dish(name, ingredients, price, weightInGrams, Guid.Parse(restaurantId.ToString()));
-                var repo = new DishRepository();
                 repo.Insert(dish);
 
                 var filePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) +
@@ -58,7 +63,6 @@ namespace AlfaFoodBack.Controllers
         {
             try
             {
-                var repo = new DishRepository();
                 var dishAsDBEntity = repo.GetById(dishId);
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();

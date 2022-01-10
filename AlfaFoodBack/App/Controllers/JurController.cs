@@ -11,13 +11,18 @@ namespace AlfaFoodBack.Controllers
     [Route("[controller]")]
     public class JurController : Controller
     {
+        private RestaurantRepository repo;
+        public JurController(RestaurantRepository repository)
+        {
+            repo = repository;
+        }
+        
         [Authorize]
         [HttpGet("establishmentsList/{userId}")]
         public async void AuthPhys(int userId)
         {
             try
             {
-                var repo = new RestaurantRepository();
                 var restaurants = repo.GetByOwnerId(userId);
                 var json = JsonConvert.SerializeObject(restaurants);
                 await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(json));

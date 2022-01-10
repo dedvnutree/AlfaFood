@@ -17,6 +17,12 @@ namespace AlfaFoodBack.Controllers
     [Route("[controller]")]
     public class OrderController : Controller
     {
+        private OrderRepository repo;
+        public OrderController(OrderRepository repository)
+        {
+            repo = repository;
+        }
+        
         [HttpPost("create")]
         public async void CreateOrder(object data)
         {
@@ -32,7 +38,6 @@ namespace AlfaFoodBack.Controllers
             {
                 order = new Order(userId, restaurantId, tableId, timeToGet, dishesIds);
                 Console.WriteLine(order);
-                var repo = new OrderRepository();
                 repo.Insert(order);
                 Response.StatusCode = 201;
             }

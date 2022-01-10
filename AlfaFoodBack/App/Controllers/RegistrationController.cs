@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AlfaFoodBack.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +17,12 @@ namespace AlfaFoodBack.Controllers
     [Route("register")]
     public class RegistrationController : Controller
     {
+        private UserRepository repo;
+        public RegistrationController(UserRepository repository)
+        {
+            repo = repository;
+        }
+        
         [HttpPost("phys")]
         public async void RegisterPhys(object data)
         {
@@ -32,7 +37,6 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 user = new User(email, password, username, phone, role);
-                var repo = new UserRepository();
                 repo.Insert(user);
                 Response.StatusCode = 201;
 
@@ -83,7 +87,6 @@ namespace AlfaFoodBack.Controllers
             try
             {
                 user = new User(email, password, username, phone, role);
-                var repo = new UserRepository();
                 repo.Insert(user);
                 Response.StatusCode = 201;
                 user = repo.IsAuth(email, password);

@@ -17,6 +17,12 @@ namespace AlfaFoodBack.Controllers
     [Route("[controller]")]
     public class AuthController : Controller
     {
+        private UserRepository repo;
+        public AuthController(UserRepository repository)
+        {
+            repo = repository;
+        }
+        
         [HttpDelete("jur")]
         public async void LogOut()
         {
@@ -65,7 +71,6 @@ namespace AlfaFoodBack.Controllers
             var password = dict["password"].ToString();
             try
             {
-                var repo = new UserRepository();
                 var user = repo.IsAuth(email, password);
 
                 if (user == null)
@@ -118,7 +123,6 @@ namespace AlfaFoodBack.Controllers
             var password = dict["password"].ToString();
             try
             {
-                var repo = new UserRepository();
                 var user = repo.IsAuth(email, password);
                 if (user == null)
                 {
