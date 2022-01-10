@@ -1,3 +1,5 @@
+using AlfaFoodBack.Controllers;
+using AlfaFoodBack.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using MySqlX.XDevAPI;
 using SignalRApp;
 
 namespace AlfaFoodBack
@@ -41,6 +44,15 @@ namespace AlfaFoodBack
             services.AddSignalR();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
+            
+            
+            services.AddScoped<IDbConnections, PostgresConn>();
+            services.AddSingleton<RestaurantRepository>();
+            services.AddSingleton<OrderRepository>();
+            services.AddSingleton<DishRepository>();
+            services.AddSingleton<TableRepository>();
+            services.AddSingleton<UserRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
